@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { getChoosenAccount, choose_accounts, deleteAccount, getSaveAccounts } from '../../utils';
+import React, { useEffect, useRef, useState } from 'react';
+import { getChoosenAccount, choose_accounts, deleteAccount, getSaveAccounts, createMeetTab, removeSelectedAccount } from '../../utils';
 import './Popup.css';
 
 const Popup = () => {
-  const [selectedAccount, setSelectAccount] = useState();
+  const [selectedAccount, setSelectAccount] = useState("");
   const [availableAccounts, setAvailableAccounts] = useState([]);
   const [accountIndex, setAccountIndex] = useState(0);
+  const [meetUrl, setMeetUrl] = useState("");
+  const meetRef = useRef(null)
   useEffect(() => {
     const call = async () => {
       const saveAccounts = await getSaveAccounts()
@@ -28,11 +30,34 @@ const Popup = () => {
 
 
   useEffect(() => {
-    chrome.runtime.onMessage.addListener((msg, sender, _) => {
+    chrome.runtime.onMessage.addListener(async (msg, sender, callBack) => {
+      console.log(msg);
       if (msg.type === "storage" && msg.event === "change") {
         window.location.reload()
       }
-      return true
+      else if (msg.type === "meet_done") {
+        const createdMeetUrl = msg.url
+        setMeetUrl(createdMeetUrl)
+      }
+      else if (msg.type === "create_meet") {
+        if (selectedAccount) {
+          createMeet();
+        }
+        else {
+          const choosenAccount = await getChoosenAccount();
+          const accountIndex = await chrome.storage.local.get(["account_index"])
+          console.log(accountIndex)
+          const index = accountIndex["account_index"]
+          if (!choosenAccount || index !== undefined) {
+            console.log("going..", choosenAccount, index)
+            callBack(true);
+          };
+          const url = `https://meet.google.com/new?authuser=${index}`
+          await createMeetTab(url)
+          callBack(true)
+        }
+      }
+      callBack(true)
     })
   }, [])
 
@@ -45,6 +70,10 @@ const Popup = () => {
     } else return
   }
 
+  const copyToClipBoard = () => {
+    navigator?.clipboard.writeText(meetUrl)
+    console.log("done copied")
+  }
   const doLogin = async () => {
     choose_accounts()
   }
@@ -53,11 +82,10 @@ const Popup = () => {
     if (selectedAccount) {
       const accountIndex = await chrome.storage.local.get(["account_index"])
       const index = accountIndex["account_index"]
+      console.log(index)
       if (index !== null) {
         const url = `https://meet.google.com/new?authuser=${index}`
-        console.log(url)
-        chrome.tabs.create({ url: url, active: false })
-          .then((tab) => console.log("Created Tab", tab))
+        createMeetTab(url)
       }
     }
   }
@@ -69,8 +97,18 @@ const Popup = () => {
         {selectedAccount ?
           <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
             <code className='email'>{`Using Account ${selectedAccount}`}</code>
-            <div style={{ marginTop: 20 }}>
+            {meetUrl &&
+              <div style={{ marginTop: 20, textAlign: "center" }}>
+                <div ref={meetRef}>{meetUrl}</div>
+
+                <div onClick={copyToClipBoard} style={{ width: 'max-content', cursor: "pointer", fontWeight: '700', marginTop: 10, border: '1px solid black', padding: '5px 10px' }}>Copy</div>
+              </div>
+            }
+            <div style={{ marginTop: 20, }}>
               <button onClick={createMeet} className='button'> Create Meet </button>
+            </div>
+            <div style={{ marginTop: 20, }}>
+              <button onClick={removeSelectedAccount} className='button'> Change Account </button>
             </div>
           </div>
           :

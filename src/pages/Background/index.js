@@ -29,9 +29,23 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     chrome.runtime.sendMessage({ "type": "storage", "event": "change" })
 })
 
-chrome.webNavigation.onCompleted.addListener(async (details) => {
+chrome.webNavigation.onCompleted.addListener((details) => {
+    console.log(details);
     if (details.tabId) {
         const url = details.url;
-        chrome.runtime.sendMessage({ "type": "meet_done", url })
+        chrome.runtime.sendMessage({ "type": "meet_done", url }, (res) => {
+            console.log(res)
+            return true
+        })
+        return true
     }
 }, { url: [{ urlContains: "meet.google.com" }] })
+
+
+
+chrome.commands.onCommand.addListener((command) => {
+    chrome.tabs.create({ url: 'popup.html' })
+    setTimeout(() => {
+        chrome.runtime.sendMessage({ "type": "create_meet" })
+    }, 1000)
+})

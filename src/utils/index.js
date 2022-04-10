@@ -57,3 +57,15 @@ export const getChoosenAccount = async () => {
         return selectedOne["selected_account"]
     }
 }
+
+export const createMeetTab = async (url) => {
+    chrome.tabs.create({ url: url, active: false })
+        .then((tab) => console.log("Created Tab", tab))
+
+    return true
+}
+
+export const removeSelectedAccount = async () => {
+    chrome.storage.local.remove("selected_account")
+    chrome.storage.local.remove("account_index")
+}
