@@ -17,6 +17,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  margin: 0 auto;
 }
 
 .button {
@@ -40,4 +41,18 @@
   color: rgb(215, 68, 68);
   background-color: rgb(223, 199, 199);
   border-radius: 8px;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
+.center-text {
+  text-align: center;
 }

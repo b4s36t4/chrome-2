@@ -5,6 +5,8 @@
 //     return true;
 // }, { url: [{ urlContains: "meet" }] })
 
+import { CREATE_DONE, MEET_CREATE, STORAGE_CHANGE } from "../../constants";
+
 // chrome.runtime.onMessage.addListener((msg, _, callBack) => {
 //     console.log("Got a message")
 //     if (typeof msg === "object") {
@@ -26,14 +28,14 @@
 // })
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
-    chrome.runtime.sendMessage({ "type": "storage", "event": "change" })
+    chrome.runtime.sendMessage({ "type": STORAGE_CHANGE, "event": "change" })
 })
 
 chrome.webNavigation.onCompleted.addListener((details) => {
     console.log(details);
     if (details.tabId) {
         const url = details.url;
-        chrome.runtime.sendMessage({ "type": "meet_done", url }, (res) => {
+        chrome.runtime.sendMessage({ "type": CREATE_DONE, url }, (res) => {
             console.log(res)
             return true
         })
@@ -46,6 +48,6 @@ chrome.webNavigation.onCompleted.addListener((details) => {
 chrome.commands.onCommand.addListener((command) => {
     chrome.tabs.create({ url: 'popup.html' })
     setTimeout(() => {
-        chrome.runtime.sendMessage({ "type": "create_meet" })
+        chrome.runtime.sendMessage({ "type": MEET_CREATE })
     }, 1000)
 })

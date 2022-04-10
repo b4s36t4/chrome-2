@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { CREATE_DONE, MEET_CREATE, STORAGE_CHANGE } from '../../constants';
 import { getChoosenAccount, choose_accounts, deleteAccount, getSaveAccounts, createMeetTab, removeSelectedAccount } from '../../utils';
 import './Popup.css';
 
@@ -32,14 +33,14 @@ const Popup = () => {
   useEffect(() => {
     chrome.runtime.onMessage.addListener(async (msg, sender, callBack) => {
       console.log(msg);
-      if (msg.type === "storage" && msg.event === "change") {
+      if (msg.type === STORAGE_CHANGE && msg.event === "change") {
         window.location.reload()
       }
-      else if (msg.type === "meet_done") {
+      else if (msg.type === CREATE_DONE) {
         const createdMeetUrl = msg.url
         setMeetUrl(createdMeetUrl)
       }
-      else if (msg.type === "create_meet") {
+      else if (msg.type === MEET_CREATE) {
         if (selectedAccount) {
           createMeet();
         }
@@ -95,19 +96,19 @@ const Popup = () => {
 
       <div className='container'>
         {selectedAccount ?
-          <div style={{ display: "flex", justifyContent: "center", flexDirection: "column", alignItems: "center" }}>
+          <div className='flex-center'>
             <code className='email'>{`Using Account ${selectedAccount}`}</code>
             {meetUrl &&
-              <div style={{ marginTop: 20, textAlign: "center" }}>
+              <div className='mt-20 center-text'>
                 <div ref={meetRef}>{meetUrl}</div>
 
                 <div onClick={copyToClipBoard} style={{ width: 'max-content', cursor: "pointer", fontWeight: '700', marginTop: 10, border: '1px solid black', padding: '5px 10px' }}>Copy</div>
               </div>
             }
-            <div style={{ marginTop: 20, }}>
+            <div className='mt-20'>
               <button onClick={createMeet} className='button'> Create Meet </button>
             </div>
-            <div style={{ marginTop: 20, }}>
+            <div className='mt-20'>
               <button onClick={removeSelectedAccount} className='button'> Change Account </button>
             </div>
           </div>
