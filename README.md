@@ -1,151 +1,88 @@
-<img src="src/assets/img/icon-128.png" width="64"/>
+Hi, there.!
 
-# Chrome Extension Boilerplate with React 17 and Webpack 5
+# Extension Use Cases
 
-[![npm](https://img.shields.io/npm/v/chrome-extension-boilerplate-react)](https://www.npmjs.com/package/chrome-extension-boilerplate-react)
-[![npm-download](https://img.shields.io/npm/dw/chrome-extension-boilerplate-react)](https://www.npmjs.com/package/chrome-extension-boilerplate-react)
-[![npm](https://img.shields.io/npm/dm/chrome-extension-boilerplate-react)](https://www.npmjs.com/package/chrome-extension-boilerplate-react)
+First thing to discuss is that this extension will create google meet links using the google accounts already Signed In.
 
-[![dependencies Status](https://david-dm.org/lxieyang/chrome-extension-boilerplate-react/status.svg)](https://david-dm.org/lxieyang/chrome-extension-boilerplate-react)
-[![devDependencies Status](https://david-dm.org/lxieyang/chrome-extension-boilerplate-react/dev-status.svg)](https://david-dm.org/lxieyang/chrome-extension-boilerplate-react?type=dev)
+So, let's say to create a new meet we have a simple link which later will be converted to full google meet url.
 
-## Announcements
+Default New Meet URL is https://meet.google.com/new Which let's user to create new meet easily.
 
-- **_This boilerplate adopts [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/)!_** For V2 users, please check out the [manifest-v2](https://github.com/lxieyang/chrome-extension-boilerplate-react/tree/manifest-v2) branch, or use version [3.x](https://www.npmjs.com/package/chrome-extension-boilerplate-react/v/3.3.0).
-  - Check out the [Manifest V3 Migration Guide](https://developer.chrome.com/docs/extensions/mv3/intro/mv3-migration/).
-- Recently added [devtools](https://developer.chrome.com/docs/extensions/mv3/devtools/) Support! Thanks [GeekaholicLin](https://github.com/lxieyang/chrome-extension-boilerplate-react/issues/17)!
-- Recently updated from **[React](https://reactjs.org)** ~~16~~ to **17**!
-- Recently updated from **[Webpack Dev Server](https://webpack.js.org/configuration/dev-server/)** ~~3.x~~ to **4.x** and **[Webpack](https://webpack.js.org/)** ~~4~~ to **5**!
-- Recently added [TypeScript](https://www.typescriptlang.org/) Support!
+By using these I have implemented a way to quickly create google meet.
 
-## Features
+The extension also support multi-sign in Version, which let's user to choose the email which will be used to create meets later.
 
-This is a basic Chrome Extensions boilerplate to help you write modular and modern Javascript code, load CSS easily and [automatic reload the browser on code changes](https://webpack.github.io/docs/webpack-dev-server.html#automatic-refresh).
+# Usage & Installations
 
-This boilerplate is updated with:
+- If you have git Just pull/clone the github Repo from here https://github.com/b4s36t4/chrome-2
+- if no git installed please install it from https://git-scm.com and then try pull/clone the branch again.
+- Once the cloning of the repo is done, run this command from the root folder of the cloned projects
+- Command is `yarn install` or `npm install` which automatically install the pacakges need for the extension to work.
+- Once that's done you can either use the extension in development or production mode.
 
-- [Chrome Extension Manifest V3](https://developer.chrome.com/docs/extensions/mv3/intro/mv3-overview/)
-- [React 17](https://reactjs.org)
-- [Webpack 5](https://webpack.js.org/)
-- [Webpack Dev Server 4](https://webpack.js.org/configuration/dev-server/)
-- [React Hot Loader](https://github.com/gaearon/react-hot-loader)
-- [eslint-config-react-app](https://www.npmjs.com/package/eslint-config-react-app)
-- [Prettier](https://prettier.io/)
-- [TypeScript](https://www.typescriptlang.org/)
+## Running in the production Mode
 
-This boilerplate is heavily inspired by and adapted from [https://github.com/samuelsimoes/chrome-extension-webpack-boilerplate](https://github.com/samuelsimoes/chrome-extension-webpack-boilerplate), with additional support for React 17 features, Webpack 5, and Webpack Dev Server 4.
+It's Just as simple as running all other node projects, just by running command
 
-Please open up an issue to nudge me to keep the npm packages up-to-date. FYI, it takes time to make different packages with different versions work together nicely.
+`yarn start` or `npm start`
 
-## Installing and Running
+Once that's done, you can able to see a new folder called `build` in the root source of the code which will contain all the things that needed extension to work.
 
-### Procedures:
+You need to upload to the chrome in-order to test or use which can be done by enabling developer mode in chrome settings.
 
-1. Check if your [Node.js](https://nodejs.org/) version is >= **14**.
-2. Clone this repository.
-3. Change the package's `name`, `description`, and `repository` fields in `package.json`.
-4. Change the name of your extension on `src/manifest.json`.
-5. Run `npm install` to install the dependencies.
-6. Run `npm start`
-7. Load your extension on Chrome following:
-   1. Access `chrome://extensions/`
-   2. Check `Developer mode`
-   3. Click on `Load unpacked extension`
-   4. Select the `build` folder.
-8. Happy hacking.
+    * Navigate to chrome://extensions or brave://extensions or edge://extensions based on the browser you use.
+    * There you can see a toggle switch which will turn-on developer mode.
+    * once the developer mode is turned on, you can upload the un-packed version (not .crx file) code which in this case is build folder that previously created while running the `yarn start`.
+    * Click on Upload Unpacked and select the build folder appropritate to your file-system.
+    * That's it you can see the extension in your address bar, Enjoy :)
 
-## Structure
+## Running in the Production Mode.
 
-All your extension's code must be placed in the `src` folder.
+    * As stated in the above you need to enable the developer mode to install the extension, so be sure to read the above points to get the context of enable the chrome developer mode for extensions.
+    * Once the extensions developer mode is done, it's time to create the extension in the production mode.
+    * To do that, we need to run a command `yarn build` or `npm build` which will build the production version of the extension and can appear in the build folder.
+    * Upload it as Un-Packed extension to enjoy the exntesion :)
 
-The boilerplate is already prepared to have a popup, an options page, a background page, and a new tab page (which replaces the new tab page of your browser). But feel free to customize these.
+## Approach I've choosen.
 
-## TypeScript
+Well, there are 2 types of approach that I got to work with.
 
-This boilerplate now supports TypeScript! The `Options` Page is implemented using TypeScript. Please refer to `src/pages/Options/` for example usages.
+One is using the default identity given by chrome ecosystem to login with the current chrome logged in user and use the google api's to create a calendar event with including the google meet in it.
 
-## Webpack auto-reload and HRM
+By using there are some drawbacks
 
-To make your workflow much more efficient this boilerplate uses the [webpack server](https://webpack.github.io/docs/webpack-dev-server.html) to development (started with `npm start`) with auto reload feature that reloads the browser automatically every time that you save some file in your editor.
+    * Can not able to use the extensions except on chrome (not evne chrome powered browsers like brave, edge etc)
+    * And we need to authniticate the user manaullly and need to check for the token expiration (ways are there to avoid this)
+    * And no more support of multiple accounts usage, because the login method chrome is prodviding under the chrome.identity is Just the user who enabled the profile sync with the chrome, not logged in google products in chrome.
+    which makes it harder to use multiple accounts.
 
-You can run the dev mode on other port if you want. Just specify the env var `port` like this:
+So based on the above issues, I've choose another approach which is like a bit of scraping but by using chrome exnteions.
 
-```
-$ PORT=6002 npm run start
-```
+There are several parts of chrome extension things comes very handy at problems like this one I'm getting.
 
-## Content Scripts
+So the basic approach of the 2nd method is Just simply store the mail and index of the account that the user logged in by navigating user manually to the follwing link
 
-Although this boilerplate uses the webpack dev server, it's also prepared to write all your bundles files on the disk at every code change, so you can point, on your extension manifest, to your bundles that you want to use as [content scripts](https://developer.chrome.com/extensions/content_scripts), but you need to exclude these entry points from hot reloading [(why?)](https://github.com/samuelsimoes/chrome-extension-webpack-boilerplate/issues/4#issuecomment-261788690). To do so you need to expose which entry points are content scripts on the `webpack.config.js` using the `chromeExtensionBoilerplate -> notHotReload` config. Look the example below.
+https://accounts.google.com/accountchooser/
 
-Let's say that you want use the `myContentScript` entry point as content script, so on your `webpack.config.js` you will configure the entry point and exclude it from hot reloading, like this:
+which will display the mail that are logged in (logged out also) with their index as sorted.
 
-```js
-{
-  …
-  entry: {
-    myContentScript: "./src/js/myContentScript.js"
-  },
-  chromeExtensionBoilerplate: {
-    notHotReload: ["myContentScript"]
-  }
-  …
-}
-```
+Saving all the mails and it's index's I can able to create a new meet using the following template url
+https://meet.google.com/new?authuser=0 => 0 is the index of the account.
 
-and on your `src/manifest.json`:
+To Know the status of the meet link, that is activated or not I'm using webNavigator which is the another cool thing available on chrome extension pack.
 
-```json
-{
-  "content_scripts": [
-    {
-      "matches": ["https://www.google.com/*"],
-      "js": ["myContentScript.bundle.js"]
-    }
-  ]
-}
-```
+That's it. Thanks for reading.
 
-## Intelligent Code Completion
+## Creating Meet.
 
-Thanks to [@hudidit](https://github.com/lxieyang/chrome-extension-boilerplate-react/issues/4)'s kind suggestions, this boilerplate supports chrome-specific intelligent code completion using [@types/chrome](https://www.npmjs.com/package/@types/chrome).
+Meet can be created using 2 ways.
 
-## Packing
+> You can easily create meeting using the chrome extension popu=-up extension menu.
 
-After the development of your extension run the command
+> There's a shortcut which can activate the chrome extension in a new window and start the meet where it will  
+> automatically copy the meet url to your clipboard. The shortcut key is `Command+Shift+1` for mac and for other
+> systems it will be `Ctrl+Shift+1`
 
-```
-$ NODE_ENV=production npm run build
-```
+For the 1st method you can copy the meet url by clicking on the copy button appearing on the popup once the meet is created and opened.
 
-Now, the content of `build` folder will be the extension ready to be submitted to the Chrome Web Store. Just take a look at the [official guide](https://developer.chrome.com/webstore/publish) to more infos about publishing.
-
-## Secrets
-
-If you are developing an extension that talks with some API you probably are using different keys for testing and production. Is a good practice you not commit your secret keys and expose to anyone that have access to the repository.
-
-To this task this boilerplate import the file `./secrets.<THE-NODE_ENV>.js` on your modules through the module named as `secrets`, so you can do things like this:
-
-_./secrets.development.js_
-
-```js
-export default { key: '123' };
-```
-
-_./src/popup.js_
-
-```js
-import secrets from 'secrets';
-ApiCall({ key: secrets.key });
-```
-
-:point_right: The files with name `secrets.*.js` already are ignored on the repository.
-
-## Resources:
-
-- [Webpack documentation](https://webpack.js.org/concepts/)
-- [Chrome Extension documentation](https://developer.chrome.com/extensions/getstarted)
-
----
-
-Michael Xieyang Liu | [Website](https://lxieyang.github.io)
+For the 2nd method link automatically created and added to your clipboard.
