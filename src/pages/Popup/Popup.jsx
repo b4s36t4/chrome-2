@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { CREATE_DONE, MEET_CREATE, STORAGE_CHANGE } from '../../constants';
+import { COPY_URL, CREATE_DONE, MEET_CREATE, STORAGE_CHANGE } from '../../constants';
 import { getChoosenAccount, choose_accounts, deleteAccount, getSaveAccounts, createMeetTab, removeSelectedAccount } from '../../utils';
 import './Popup.css';
 
@@ -29,7 +29,6 @@ const Popup = () => {
     call()
   }, [])
 
-
   useEffect(() => {
     chrome.runtime.onMessage.addListener(async (msg, sender, callBack) => {
       console.log(msg);
@@ -47,16 +46,24 @@ const Popup = () => {
         else {
           const choosenAccount = await getChoosenAccount();
           const accountIndex = await chrome.storage.local.get(["account_index"])
-          console.log(accountIndex)
+          console.log(accountIndex, choosenAccount, "asas")
           const index = accountIndex["account_index"]
-          if (!choosenAccount || index !== undefined) {
+          if (!choosenAccount || index === undefined) {
             console.log("going..", choosenAccount, index)
             callBack(true);
+            return
           };
           const url = `https://meet.google.com/new?authuser=${index}`
           await createMeetTab(url)
           callBack(true)
         }
+      }
+      else if (msg.type === COPY_URL) {
+        const url = msg.url
+        copyToClipBoard(url)
+        const currentTab = await chrome.tabs.query({ currentWindow: true, active: true })
+        console.log(currentTab[0].id)
+        chrome.tabs.remove(currentTab[0].id)
       }
       callBack(true)
     })
@@ -71,7 +78,12 @@ const Popup = () => {
     } else return
   }
 
-  const copyToClipBoard = () => {
+  const copyToClipBoard = (url) => {
+    if (url) {
+      navigator.clipboard.writeText(url);
+      return
+    }
+
     navigator?.clipboard.writeText(meetUrl)
     console.log("done copied")
   }

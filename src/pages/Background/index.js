@@ -5,7 +5,8 @@
 //     return true;
 // }, { url: [{ urlContains: "meet" }] })
 
-import { CREATE_DONE, MEET_CREATE, STORAGE_CHANGE } from "../../constants";
+import { COPY_URL, CREATE_DONE, MEET_CREATE, STORAGE_CHANGE } from "../../constants";
+import { copyMeetURL } from "../../utils";
 
 // chrome.runtime.onMessage.addListener((msg, _, callBack) => {
 //     console.log("Got a message")
@@ -36,7 +37,14 @@ chrome.webNavigation.onCompleted.addListener((details) => {
     if (details.tabId) {
         const url = details.url;
         chrome.runtime.sendMessage({ "type": CREATE_DONE, url }, (res) => {
-            console.log(res)
+            chrome.scripting.executeScript({ func: copyMeetURL, target: { tabId: details.tabId } }).then((res) => {
+                res.forEach(result => {
+                    if (result) {
+                        chrome.runtime.sendMessage({ type: COPY_URL, "url": result.result })
+
+                    }
+                });
+            })
             return true
         })
         return true
@@ -45,9 +53,9 @@ chrome.webNavigation.onCompleted.addListener((details) => {
 
 
 
-chrome.commands.onCommand.addListener((command) => {
-    chrome.tabs.create({ url: 'popup.html' })
-    setTimeout(() => {
-        chrome.runtime.sendMessage({ "type": MEET_CREATE })
+chrome.commands.onCommand.addListener(async (command) => {
+    const tab = await chrome.tabs.create({ url: 'popup.html' })
+    setTimeout(async () => {
+        chrome.runtime.sendMessage({ "type": MEET_CREATE, tabId: tab.id })
     }, 1000)
 })
