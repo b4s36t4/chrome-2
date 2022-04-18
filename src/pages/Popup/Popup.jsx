@@ -40,13 +40,15 @@ const Popup = () => {
         setMeetUrl(createdMeetUrl)
       }
       else if (msg.type === MEET_CREATE) {
+        const isShortcutTab = msg?.shortcut;
+        console.log(msg, callBack)
         if (selectedAccount) {
           createMeet();
+          callBack(true)
         }
         else {
           const choosenAccount = await getChoosenAccount();
           const accountIndex = await chrome.storage.local.get(["account_index"])
-          console.log(accountIndex, choosenAccount, "asas")
           const index = accountIndex["account_index"]
           if (!choosenAccount || index === undefined) {
             console.log("going..", choosenAccount, index)
@@ -59,11 +61,12 @@ const Popup = () => {
         }
       }
       else if (msg.type === COPY_URL) {
+        console.log("copying...")
         const url = msg.url
         copyToClipBoard(url)
         const currentTab = await chrome.tabs.query({ currentWindow: true, active: true })
         console.log(currentTab[0].id)
-        chrome.tabs.remove(currentTab[0].id)
+        // chrome.tabs.remove(currentTab[0].id)
       }
       callBack(true)
     })
@@ -80,6 +83,7 @@ const Popup = () => {
 
   const copyToClipBoard = (url) => {
     if (url) {
+      console.log(url, "url")
       navigator.clipboard.writeText(url);
       return
     }

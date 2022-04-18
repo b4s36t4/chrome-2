@@ -56,6 +56,6 @@ chrome.webNavigation.onCompleted.addListener((details) => {
 chrome.commands.onCommand.addListener(async (command) => {
     const tab = await chrome.tabs.create({ url: 'popup.html' })
     setTimeout(async () => {
-        chrome.runtime.sendMessage({ "type": MEET_CREATE, tabId: tab.id })
+        chrome.runtime.sendMessage({ "type": MEET_CREATE, tabId: tab.id, "shortcut": true })
     }, 1000)
 })
